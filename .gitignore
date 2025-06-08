@@ -1,0 +1,38 @@
+# Gradle
+.gradle/
+build/
+bin/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+tomcat/logs/
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Tomcat
+tomcat/temp/
+tomcat/work/
+tomcat/webapps/
+!tomcat/conf/
+!tomcat/bin/
+
+# Local configuration
+application-local.properties
+
+# OS-specific
+.DS_Store
+Thumbs.db 
