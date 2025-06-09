@@ -1,6 +1,92 @@
-# Basic Web Application
+# Full Stack Web Application
 
-A basic web application using Spring Boot, MySQL, and Tomcat. The application provides user authentication functionality with secure password storage.
+This project is a full-stack web application that consists of a React frontend and a Spring Boot backend, using JWT for secure authentication.
+
+## Project Structure
+
+```
+front-back-web/
+├── frontend/              # React frontend application
+│   ├── src/              # React source code
+│   ├── public/           # Static files
+│   └── package.json      # Frontend dependencies
+│
+├── backend/              # Spring Boot backend application
+    ├── src/             # Java source code
+    ├── build.gradle     # Backend dependencies
+    └── ...
+```
+
+## Prerequisites
+
+- Java 21
+- Node.js (managed via nvm)
+- MySQL
+- Gradle
+
+## Setup Instructions
+
+### Backend (Spring Boot)
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Build the project:
+   ```bash
+   ./gradlew build
+   ```
+
+3. Run the application:
+   ```bash
+   ./gradlew bootRun
+   ```
+
+The backend API will be available at `http://localhost:8080`
+
+### Frontend (React)
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+The frontend application will be available at `http://localhost:3000`
+
+## Features
+
+- User authentication with JWT
+- Secure password storage
+- RESTful API endpoints
+- React-based user interface
+
+## Security
+
+This application implements several security measures:
+- JWT-based authentication
+- Secure password hashing
+- CORS configuration
+- Spring Security implementation
+
+## API Documentation
+
+[API documentation will be added as endpoints are implemented]
+
+# front-back-web
+React frontend + REST backend app
+
+A React frontend + REST backend web application using Spring Boot, MySQL, and Tomcat. The application provides user authentication functionality with secure password storage.
 
 ## Requirements
 
@@ -325,5 +411,3 @@ tomcat/
 This setup provides an isolated environment for testing and development, while still using the Homebrew-installed Tomcat binaries and libraries.
 
 
-# front-back-web
-React frontend + REST backend app
