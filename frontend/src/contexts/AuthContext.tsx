@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { User, LoginRequest, RegisterRequest, AuthContextType } from '../types/auth';
 import { authService } from '../services/authService';
 
@@ -9,22 +9,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!token);
 
-    useEffect(() => {
-        const initAuth = async () => {
-            if (token) {
-                try {
-                    const response = await authService.getCurrentUser();
-                    setUser(response.user);
-                    setIsAuthenticated(true);
-                } catch (error) {
-                    console.error('Failed to get current user:', error);
-                    logout();
-                }
-            }
-        };
+    const logout = useCallback(() => {
+        localStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
+        setIsAuthenticated(false);
+    }, []);
 
+    const initAuth = useCallback(async () => {
+        if (token) {
+            try {
+                const response = await authService.getCurrentUser();
+                setUser(response.user);
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error('Failed to get current user:', error);
+                logout();
+            }
+        }
+    }, [token, logout]);
+
+    useEffect(() => {
         initAuth();
-    }, [token]);
+    }, [initAuth]);
 
     const login = async (credentials: LoginRequest) => {
         const response = await authService.login(credentials);
@@ -40,13 +47,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setToken(response.token);
         setUser(response.user);
         setIsAuthenticated(true);
-    };
-
-    const logout = () => {
-        localStorage.removeItem('token');
-        setToken(null);
-        setUser(null);
-        setIsAuthenticated(false);
     };
 
     const value = {
