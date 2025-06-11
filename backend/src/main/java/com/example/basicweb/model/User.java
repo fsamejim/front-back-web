@@ -3,6 +3,7 @@ package com.example.basicweb.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
@@ -19,12 +20,13 @@ public class User {
     private String username;
 
     @NotBlank
-    private String password;
-
-    @NotBlank
     @Email
     @Column(unique = true)
     private String email;
+
+    @NotBlank
+    @JsonIgnore
+    private String password;
 
     private boolean active = true;
 
@@ -53,20 +55,20 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isActive() {
