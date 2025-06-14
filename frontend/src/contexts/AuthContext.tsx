@@ -16,7 +16,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAuthenticated(false);
     }, []);
 
+    // Skip automatic authentication on initial load
+    const [initialLoadComplete, setInitialLoadComplete] = useState<boolean>(false);
+    
     const initAuth = useCallback(async () => {
+        if (!initialLoadComplete) {
+            // Skip token validation on first load to prevent immediate backend call
+            setInitialLoadComplete(true);
+            if (token) {
+                // Just assume we're authenticated for now based on token presence
+                setIsAuthenticated(true);
+                // We'll validate the token when actually needed rather than on initial load
+            }
+            return;
+        }
+        
         if (token) {
             try {
                 const response = await authService.getCurrentUser();
@@ -27,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 logout();
             }
         }
-    }, [token, logout]);
+    }, [token, logout, initialLoadComplete]);
 
     useEffect(() => {
         initAuth();

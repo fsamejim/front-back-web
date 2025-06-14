@@ -15,7 +15,7 @@ export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
 export PATH="$JAVA_HOME/bin:$PATH"
 
 export CATALINA_BASE="/Users/sammy.samejima/privatespace/front-back-web/tomcat"
-export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
+export CATALINA_HOME="/Users/sammy.samejima/privatespace/front-back-web/tomcat"
 export CATALINA_PID="/Users/sammy.samejima/privatespace/front-back-web/tomcat/catalina.pid"
 
 echo "Starting Tomcat..."
