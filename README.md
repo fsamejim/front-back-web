@@ -1,4 +1,33 @@
 # Full Stack Web Application
+ ✅ Tomcat started at 20:18:56 and has been running stable✅ Frontend-backend integration working - access logs
+  show successful API calls:
+  - POST /basic-web/api/auth/login → 200 ✓
+  - GET /basic-web/api/auth/me → 200 ✓
+  - OPTIONS requests → 200 ✓ (CORS working)
+
+  The culprit was Cursor's Java extension auto-managing Spring Boot applications:
+  1. Detected your manual Tomcat process
+  2. Shut it down to prevent "conflicts"
+  3. Failed to restart it properly under IDE management
+
+  Solutions for future development:
+
+  1. Keep using terminal: Run ./start-tomcat.sh and npm start outside Cursor
+  2. Disable Java auto-management: In Cursor settings, disable Spring Boot auto-start features
+  3. Use Cursor's run configs: Let Cursor handle the entire lifecycle instead of manual scripts
+
+  Your external Tomcat configuration is working perfectly - the issue was just IDE interference, not your setup!
+
+
+CatGPT suggest:
+   Run your Tomcat backend manually:
+   ./start-tomcat.sh
+
+   Run your React frontend manually:
+   npm start
+   
+•	Use separate terminal tabs or windows (outside of Claude or Cursor if needed)
+
 
 This project is a full-stack web application that consists of a React frontend and a Spring Boot backend, using JWT for secure authentication.
 
