@@ -32,57 +32,95 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword()
-            )
-        );
+        try {
+            // Validate input
+            if (loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Username and password are required");
+                return ResponseEntity.badRequest().body(errorResponse);
+            }
+            
+            // Attempt authentication
+            Authentication authentication = null;
+            try {
+                authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                    )
+                );
+            } catch (Exception e) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Invalid username or password");
+                return ResponseEntity.status(401).body(errorResponse);
+            }
+            
+            // Set security context
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            
+            // Generate JWT token
+            String jwt = tokenProvider.generateToken(authentication);
+            
+            // Get user details
+            User user = userService.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(authentication);
-        
-        User user = userService.findByUsername(loginRequest.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", jwt);
-        response.put("user", user);
-        
-        return ResponseEntity.ok(response);
+            // Build response
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", jwt);
+            response.put("user", user);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Authentication failed: " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-        User user = userService.createUser(
-            registerRequest.getUsername(),
-            registerRequest.getEmail(),
-            registerRequest.getPassword()
-        );
-
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
+        try {
+            User user = userService.createUser(
                 registerRequest.getUsername(),
+                registerRequest.getEmail(),
                 registerRequest.getPassword()
-            )
-        );
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(authentication);
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    registerRequest.getUsername(),
+                    registerRequest.getPassword()
+                )
+            );
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", jwt);
-        response.put("user", user);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.generateToken(authentication);
 
-        return ResponseEntity.ok(response);
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", jwt);
+            response.put("user", user);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Registration failed: " + e.getMessage());
+            return ResponseEntity.status(400).body(errorResponse);
+        }
     }
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName())
-            .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        return ResponseEntity.ok(user);
+        try {
+            User user = userService.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to get user: " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
     }
 }
 

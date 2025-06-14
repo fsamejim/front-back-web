@@ -41,12 +41,18 @@ export const authService = {
             throw new Error('No token found');
         }
 
-        const response = await axios.get(`${API_URL}/me`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return response.data;
+        try {
+            const response = await axios.get(`${API_URL}/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching current user:', error);
+            localStorage.removeItem('token'); // Remove invalid token
+            throw new Error('Authentication failed. Please log in again.');
+        }
     }
 };
 

@@ -1,0 +1,3 @@
+Tomcat Version: 11.0.7
+Setup Date: Fri Jun 13 18:32:38 CDT 2025
+CATALINA_HOME: /opt/homebrew/Cellar/tomcat/11.0.7/libexec
