@@ -1,10 +1,6 @@
 # Full Stack Web Application
- ✅ Tomcat started at 20:18:56 and has been running stable✅ Frontend-backend integration working - access logs
-  show successful API calls:
-  - POST /basic-web/api/auth/login → 200 ✓
-  - GET /basic-web/api/auth/me → 200 ✓
-  - OPTIONS requests → 200 ✓ (CORS working)
 
+How to run the application:
   The culprit was Cursor's Java extension auto-managing Spring Boot applications:
   1. Detected your manual Tomcat process
   2. Shut it down to prevent "conflicts"
@@ -12,7 +8,8 @@
 
   Solutions for future development:
 
-  1. Keep using terminal: Run ./start-tomcat.sh and npm start outside Cursor
+  1. Keep using terminal:
+       Run ./start-tomcat.sh and npm start outside Cursor
   2. Disable Java auto-management: In Cursor settings, disable Spring Boot auto-start features
   3. Use Cursor's run configs: Let Cursor handle the entire lifecycle instead of manual scripts
 
@@ -28,6 +25,9 @@ CatGPT suggest:
    
 •	Use separate terminal tabs or windows (outside of Claude or Cursor if needed)
 
+Solutrion: use run-app script
+ ./run-app.sh
+
 
 This project is a full-stack web application that consists of a React frontend and a Spring Boot backend, using JWT for secure authentication.
 
@@ -35,16 +35,62 @@ This project is a full-stack web application that consists of a React frontend a
 
 ```
 front-back-web/
-├── frontend/              # React frontend application
-│   ├── src/              # React source code
-│   ├── public/           # Static files
-│   └── package.json      # Frontend dependencies
+├── frontend/                    # React frontend application
+│   ├── src/                    # React source code
+│   │   ├── components/        # React components
+│   │   │   ├── auth/         # Authentication related components
+│   │   │   └── common/       # Shared components
+│   │   ├── contexts/         # React contexts (e.g., AuthContext)
+│   │   ├── services/         # API service calls
+│   │   └── App.tsx          # Main application component
+│   ├── public/               # Static files
+│   └── package.json         # Frontend dependencies
 │
-├── backend/              # Spring Boot backend application
-    ├── src/             # Java source code
-    ├── build.gradle     # Backend dependencies
-    └── ...
+├── backend/                   # Spring Boot backend application
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/example/basicweb/
+│   │   │   │   ├── config/          # Configuration classes
+│   │   │   │   │   └── SecurityConfig.java
+│   │   │   │   ├── controller/      # REST controllers
+│   │   │   │   │   └── AuthController.java
+│   │   │   │   ├── model/           # Data models
+│   │   │   │   │   └── User.java
+│   │   │   │   ├── repository/      # Data access layer
+│   │   │   │   │   └── UserRepository.java
+│   │   │   │   ├── security/        # Security related classes
+│   │   │   │   │   └── JwtAuthenticationFilter.java
+│   │   │   │   └── service/         # Business logic
+│   │   │   │       └── UserService.java
+│   │   │   └── resources/
+│   │   │       ├── application.properties  # Application configuration
+│   │   │       ├── init.sql               # Database initialization
+│   │   │       ├── schema.sql             # Database schema
+│   │   │       └── data.sql               # Initial data
+│   │   └── test/                # Test classes
+│   ├── build.gradle            # Backend dependencies
+│   └── gradlew                 # Gradle wrapper
+│
+├── tomcat/                     # Local Tomcat server
+│   ├── bin/                   # Tomcat binaries (symlink)
+│   ├── conf/                  # Tomcat configuration (symlink)
+│   ├── lib/                   # Tomcat libraries (symlink)
+│   ├── logs/                  # Application logs
+│   ├── temp/                  # Temporary files
+│   ├── webapps/              # Deployed applications
+│   └── work/                 # Working directory
+│
+├── run-app.sh                 # Script to start both frontend and backend
+├── start-tomcat.sh           # Script to start Tomcat
+├── stop-tomcat.sh            # Script to stop Tomcat
+└── README.md                 # Project documentation
 ```
+
+Key Components:
+- **Frontend**: React application with TypeScript, using modern React practices (hooks, contexts)
+- **Backend**: Spring Boot application with JWT authentication and MySQL database
+- **Tomcat**: External Tomcat server for production-like deployment
+- **Scripts**: Helper scripts for managing the application lifecycle
 
 ## Prerequisites
 
@@ -72,7 +118,32 @@ front-back-web/
    ./gradlew bootRun
    ```
 
-The backend API will be available at `http://localhost:8080`
+   Find Tomcat process
+   ps aux | grep tomcat
+   pkill -f tomcat
+   pkill -9 -f tomcat   (force kill)
+
+The backend API will be available at `http://localhost:8080`Let me explain the key 
+
+
+Differences between ./gradlew bootRun and ./start-tomcat.sh:
+   ./gradlew bootRun:
+      Uses Spring Boot's embedded Tomcat server
+      Runs directly from the Spring Boot application
+      Simpler to use but less configurable
+      Good for development and testing
+      Runs on the default Spring Boot port (8080)
+      Managed by Spring Boot's lifecycle
+   ./start-tomcat.sh:
+      Uses an external, standalone Tomcat server
+      More configurable (can modify server.xml, etc.)
+      Better for production-like environments
+      Allows multiple applications to run on the same Tomcat instance
+      Can be configured with different ports, SSL, etc.
+      Managed independently of the application
+
+
+
 
 ### Frontend (React)
 
@@ -90,6 +161,12 @@ The backend API will be available at `http://localhost:8080`
    ```bash
    npm start
    ```
+
+   Find the all PID(processes) that are using port 3000
+      lsof -i :3000
+
+   Kill using the PID
+      kill <PID>
 
 The frontend application will be available at `http://localhost:3000`
 
@@ -284,159 +361,5 @@ spring.datasource.password=password123
 spring.jpa.hibernate.ddl-auto=none
 spring.sql.init.mode=never
 ```
-
-## Project Structure
-
-```
-src/main/
-├── java/com/example/basicweb/
-│   ├── BasicWebApplication.java
-│   ├── config/
-│   │   └── SecurityConfig.java
-│   ├── controller/
-│   │   └── AuthController.java
-│   ├── model/
-│   │   └── User.java
-│   ├── repository/
-│   │   └── UserRepository.java
-│   └── service/
-│       └── UserService.java
-├── resources/
-│   ├── application.properties
-│   ├── init.sql
-│   ├── schema.sql
-│   ├── data.sql
-│   └── templates/
-│       ├── login.html
-│       ├── register.html
-│       └── home.html
-```
-
-## Running the Application
-
-1. **Setup Tomcat Environment**
-   ```bash
-   ./setup-tomcat.sh
-   ```
-
-2. **Build and Deploy**
-   ```bash
-   ./gradlew war
-   cp build/libs/basic-web-1.0-SNAPSHOT.war tomcat/webapps/basic-web.war
-   ```
-
-3. **Start Tomcat**
-   ```bash
-   ./start-tomcat.sh
-   ```
-
-4. Access the application at: http://localhost:8080/basic-web
-
-5. **Stop Tomcat** (when needed)
-   ```bash
-   ./stop-tomcat.sh
-   ```
-
-## Security Features
-
-- Password encryption using BCrypt
-- Form-based authentication
-- Session management
-- Protected endpoints
-
-## Getting Started
-
-1. **Database Setup**
-   ```bash
-   mysql -u root < src/main/resources/init.sql
-   ```
-
-2. **Application Properties**
-   - Database URL: jdbc:mysql://localhost:3306/basicwebdb
-   - Username: sammy
-   - Password: password123
-
-3. **Build and Run**
-   ```bash
-   ./gradlew bootRun
-   ```
-
-4. **Access the Application**
-   - URL: http://localhost:8080/basic-web
-   - Default admin credentials:
-     - Username: admin
-     - Password: admin123
-
-## Local Tomcat Setup
-
-For development, it's recommended to use a local Tomcat setup instead of the global Homebrew installation. This allows for isolated testing and development.
-
-1. **Create Local Tomcat Directory Structure**
-   ```bash
-   # Create basic directory structure
-   mkdir -p tomcat/webapps tomcat/logs tomcat/temp tomcat/work
-   ```
-
-2. **Create Symbolic Links to Tomcat Resources**
-   ```bash
-   # Link to Tomcat's binary files
-   ln -s /opt/homebrew/Cellar/tomcat/11.0.7/libexec/bin tomcat/bin
-   
-   # Link to Tomcat's library files
-   ln -s /opt/homebrew/Cellar/tomcat/11.0.7/libexec/lib tomcat/lib
-   
-   # Link to Tomcat's configuration
-   ln -s /opt/homebrew/Cellar/tomcat/11.0.7/libexec/conf tomcat/conf
-   ```
-
-3. **Verify Directory Structure**
-   ```bash
-   ls -la tomcat/
-   # Should show:
-   # bin -> /opt/homebrew/Cellar/tomcat/11.0.7/libexec/bin
-   # conf -> /opt/homebrew/Cellar/tomcat/11.0.7/libexec/conf
-   # lib -> /opt/homebrew/Cellar/tomcat/11.0.7/libexec/lib
-   # logs/
-   # temp/
-   # webapps/
-   # work/
-   ```
-
-4. **Deploy Application**
-   ```bash
-   # Build the application
-   ./gradlew clean build
-   
-   # Copy WAR to local Tomcat webapps
-   cp build/libs/basic-web-1.0-SNAPSHOT.war tomcat/webapps/basic-web.war
-   ```
-
-5. **Start/Stop Tomcat**
-   ```bash
-   # Start Tomcat
-   tomcat/bin/startup.sh
-   
-   # Stop Tomcat
-   tomcat/bin/shutdown.sh
-   
-   # View logs
-   tail -f tomcat/logs/catalina.out
-   ```
-
-The application will be available at: http://localhost:8080/basic-web
-
-### Note on Directory Structure
-```
-tomcat/
-├── bin/ -> symbolic link to Tomcat binaries
-├── conf/ -> symbolic link to Tomcat configuration
-├── lib/ -> symbolic link to Tomcat libraries
-├── logs/ -> local logs directory
-├── temp/ -> local temp directory
-├── webapps/ -> local webapps directory
-└── work/ -> local work directory
-```
-
-This setup provides an isolated environment for testing and development, while still using the Homebrew-installed Tomcat binaries and libraries.
 
 
