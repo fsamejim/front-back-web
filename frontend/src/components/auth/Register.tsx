@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -15,7 +15,7 @@ export const Register: React.FC = () => {
         e.preventDefault();
         try {
             await register({ username, email, password });
-            navigate('/dashboard');
+            navigate('/login');
         } catch (err) {
             setError('Failed to register. Please try again.');
         }
@@ -83,6 +83,13 @@ export const Register: React.FC = () => {
                     >
                         Register
                     </Button>
+                    <Box sx={{ textAlign: 'center' }}>
+                        <Link to="/login" style={{ textDecoration: 'none' }}>
+                            <Typography variant="body2" color="primary">
+                                Already have an account? Sign in
+                            </Typography>
+                        </Link>
+                    </Box>
                 </Box>
             </Box>
         </Container>

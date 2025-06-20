@@ -1,50 +1,42 @@
 # Full Stack Web Application
 
-How to run the application:
-  The culprit was Cursor's Java extension auto-managing Spring Boot applications:
-  1. Detected your manual Tomcat process
-  2. Shut it down to prevent "conflicts"
-  3. Failed to restart it properly under IDE management
+A full-stack web application with React frontend and Spring Boot backend, featuring user authentication and registration functionality.
 
-  Solutions for future development:
+## Important Note: Cursor IDE Integration
 
-  1. Keep using terminal:
-       Run ./start-tomcat.sh and npm start outside Cursor
-  2. Disable Java auto-management: In Cursor settings, disable Spring Boot auto-start features
-  3. Use Cursor's run configs: Let Cursor handle the entire lifecycle instead of manual scripts
+When running the application in Cursor IDE, be aware of the Java extension's behavior:
+1. The Java extension auto-manages Spring Boot applications
+2. It may detect and shut down manual Tomcat processes to prevent "conflicts"
+3. This can cause issues with the application startup
 
-  Your external Tomcat configuration is working perfectly - the issue was just IDE interference, not your setup!
-
-
-CatGPT suggest:
-   Run your Tomcat backend manually:
-   ./start-tomcat.sh
-
-   Run your React frontend manually:
-   npm start
-   
-•	Use separate terminal tabs or windows (outside of Claude or Cursor if needed)
-
-Solutrion: use run-app script
- ./run-app.sh
-
-
-This project is a full-stack web application that consists of a React frontend and a Spring Boot backend, using JWT for secure authentication.
+Solutions for development:
+1. Use the provided `run-app.sh` script which:
+   - Starts Tomcat in a separate terminal
+   - Starts React frontend in another terminal
+   - Avoids Cursor's Java extension interference
+2. Or disable Java auto-management in Cursor settings
+3. Or use Cursor's run configurations instead of manual scripts
 
 ## Project Structure
 
 ```
 front-back-web/
 ├── frontend/                    # React frontend application
-│   ├── src/                    # React source code
-│   │   ├── components/        # React components
-│   │   │   ├── auth/         # Authentication related components
-│   │   │   └── common/       # Shared components
-│   │   ├── contexts/         # React contexts (e.g., AuthContext)
-│   │   ├── services/         # API service calls
-│   │   └── App.tsx          # Main application component
-│   ├── public/               # Static files
-│   └── package.json         # Frontend dependencies
+│   ├── src/
+│   │   ├── components/         # React components
+│   │   │   ├── auth/          # Authentication components
+│   │   │   │   ├── Login.tsx  # Login page with registration link
+│   │   │   │   ├── Register.tsx # Registration page
+│   │   │   │   └── ProtectedRoute.tsx # Route protection
+│   │   │   └── common/        # Shared components
+│   │   ├── contexts/          # React contexts
+│   │   │   └── AuthContext.tsx # Authentication context
+│   │   ├── services/          # API services
+│   │   │   └── authService.ts # Authentication API calls
+│   │   ├── types/             # TypeScript types
+│   │   │   └── auth.ts        # Authentication types
+│   │   └── App.tsx           # Main application component
+│   └── package.json          # Frontend dependencies
 │
 ├── backend/                   # Spring Boot backend application
 │   ├── src/
@@ -86,11 +78,121 @@ front-back-web/
 └── README.md                 # Project documentation
 ```
 
-Key Components:
-- **Frontend**: React application with TypeScript, using modern React practices (hooks, contexts)
-- **Backend**: Spring Boot application with JWT authentication and MySQL database
-- **Tomcat**: External Tomcat server for production-like deployment
-- **Scripts**: Helper scripts for managing the application lifecycle
+## Features
+
+- User authentication with JWT
+- User registration with email verification
+- Secure password storage using BCrypt
+- Protected routes in frontend
+- RESTful API endpoints
+- React-based user interface with Material-UI
+- MySQL database for data persistence
+- External Tomcat deployment
+
+## Quick Start
+
+1. Start the application using the run script:
+   ```bash
+   ./run-app.sh
+   ```
+   This will:
+   - Start Tomcat server in one terminal
+   - Start React frontend in another terminal
+
+2. Access the application:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8080/basic-web/api
+
+3. Default admin credentials:
+   - Username: `admin`
+   - Password: `admin123`
+
+## Development Setup
+
+### Frontend (React)
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies (only needed first time or when dependencies change):
+   ```bash
+   npm install
+   ```
+
+3. Clean and build the production version:
+   ```bash
+   # Remove the old build
+   rm -rf build/
+   # Create new production build
+   npm run build
+   ```
+
+4. Start the development server:
+   ```bash
+   npm start
+   ```
+
+### Backend (Spring Boot)
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ./gradlew clean
+   ```
+
+2. Build the project:
+   ```bash
+   ./gradlew build
+   ```
+
+3. Deploy to Tomcat:
+   ```bash
+   ./gradlew war
+   cp build/libs/basic-web-1.0-SNAPSHOT.war ../tomcat/webapps/basic-web.war
+   ```
+
+## Authentication Flow
+
+1. **Registration**:
+   - User clicks "Register here" on login page
+   - Enters username, email, and password
+   - On successful registration, redirected to login page
+
+2. **Login**:
+   - User enters credentials
+   - JWT token is stored in localStorage
+   - User is redirected to dashboard
+
+3. **Protected Routes**:
+   - Routes are protected using `ProtectedRoute` component
+   - Unauthenticated users are redirected to login
+   - JWT token is validated on each request
+
+## Troubleshooting
+
+### Tomcat Issues
+If Tomcat fails to start:
+```bash
+# Check Tomcat process
+ps aux | grep tomcat
+
+# Kill Tomcat process
+pkill -f tomcat
+# or force kill
+pkill -9 -f tomcat
+```
+
+### Frontend Issues
+If React development server fails:
+```bash
+# Check processes using port 3000
+lsof -i :3000
+
+# Kill the process
+kill <PID>
+```
 
 ## Prerequisites
 
@@ -99,31 +201,6 @@ Key Components:
 - MySQL
 - Gradle
 
-## Setup Instructions
-
-### Backend (Spring Boot)
-
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-
-2. Build the project:
-   ```bash
-   ./gradlew build
-   ```
-
-3. Run the application:
-   ```bash
-   ./gradlew bootRun
-   ```
-
-   Find Tomcat process
-   ps aux | grep tomcat
-   pkill -f tomcat
-   pkill -9 -f tomcat   (force kill)
-
-The backend API will be available at `http://localhost:8080`Let me explain the key 
 
 
 Differences between ./gradlew bootRun and ./start-tomcat.sh:
@@ -143,129 +220,6 @@ Differences between ./gradlew bootRun and ./start-tomcat.sh:
       Managed independently of the application
 
 
-
-
-### Frontend (React)
-
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-   ```bash
-   npm start
-   ```
-
-   Find the all PID(processes) that are using port 3000
-      lsof -i :3000
-
-   Kill using the PID
-      kill <PID>
-
-The frontend application will be available at `http://localhost:3000`
-
-## Features
-
-- User authentication with JWT
-- Secure password storage
-- RESTful API endpoints
-- React-based user interface
-
-## Security
-
-This application implements several security measures:
-- JWT-based authentication
-- Secure password hashing
-- CORS configuration
-- Spring Security implementation
-
-## API Documentation
-
-[API documentation will be added as endpoints are implemented]
-
-# front-back-web
-React frontend + REST backend app
-
-A React frontend + REST backend web application using Spring Boot, MySQL, and Tomcat. The application provides user authentication functionality with secure password storage.
-
-## Requirements
-
-- Java 21 or newer
-- MySQL 8.0.42 or newer
-- Tomcat 9.0.0 or newer (installed via Homebrew)
-- Gradle (included in wrapper)
-
-   java --version && mysql --version && catalina version
-
-
-## Project Overview
-
-- Java-based web application using Spring Boot 3.2.3
-- MySQL database for data persistence
-- User authentication with encrypted passwords
-- Standard Java project structure using Gradle
-- External Tomcat deployment
-
-## Password Validation
-
-To verify the admin password hash is correctly set up:
-
-1. The default admin credentials are:
-   - Username: `admin`
-   - Password: `admin123`
-
-2. Run the password validation test:
-   ```bash
-   ./gradlew test --tests "com.example.basicweb.PasswordHashTest"
-   ```
-   This test verifies that the BCrypt hash in `data.sql` matches the password "admin123".
-
-3. If you need to generate a new password hash, you can run:
-   ```bash
-   ./gradlew run -PmainClass=com.example.basicweb.util.PasswordHashGenerator
-   ```
-   This utility will generate new BCrypt hashes and verify them.
-
-### Note on BCrypt Hashes
-
-BCrypt intentionally generates different hash values for the same password. This is a security feature:
-- Each hash includes a random salt to prevent rainbow table attacks
-- The salt is automatically stored as part of the hash string
-- Different hashes of the same password will all verify successfully
-- Hash format: `$2a$10$...` where:
-  - `$2a$` is the BCrypt version
-  - `10` is the work factor
-  - The rest contains the salt and hash combined
-
-## Build and Development
-
-### Gradle Commands
-
-```bash
-# Build the project
-./gradlew build
-
-# Build WAR file only
-./gradlew war
-
-# Clean build directory
-./gradlew clean
-
-# Run tests
-./gradlew test
-
-# Show project dependencies
-./gradlew dependencies
-
-# Build without running tests
-./gradlew build -x test
-```
 
 ### Build Configuration
 
@@ -306,15 +260,6 @@ java {
    
    # Set JAVA_HOME (add to your .zshrc or .bashrc)
    export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
-   ```
-
-3. **Build and Deploy**
-   ```bash
-   # Build the WAR file
-   ./gradlew war
-
-   # Copy WAR to Tomcat webapps
-   cp build/libs/basic-web-1.0-SNAPSHOT.war tomcat/webapps/basic-web.war
    ```
 
 ## Database Configuration
@@ -361,5 +306,6 @@ spring.datasource.password=password123
 spring.jpa.hibernate.ddl-auto=none
 spring.sql.init.mode=never
 ```
+
 
 
