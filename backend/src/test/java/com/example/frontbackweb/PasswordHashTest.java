@@ -1,4 +1,4 @@
-package com.example.basicweb;
+package com.example.frontbackweb;
 
 import org.junit.jupiter.api.Test;
 import at.favre.lib.crypto.bcrypt.BCrypt;

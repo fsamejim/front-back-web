@@ -41,7 +41,7 @@ front-back-web/
 ├── backend/                   # Spring Boot backend application
 │   ├── src/
 │   │   ├── main/
-│   │   │   ├── java/com/example/basicweb/
+│   │   │   ├── java/com/example/frontbackweb/
 │   │   │   │   ├── config/          # Configuration classes
 │   │   │   │   │   └── SecurityConfig.java
 │   │   │   │   ├── controller/      # REST controllers
@@ -101,7 +101,7 @@ front-back-web/
 
 2. Access the application:
    - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8080/basic-web/api
+   - Backend API: http://localhost:8080/front-back-web/api
 
 3. Default admin credentials:
    - Username: `admin`
@@ -150,7 +150,7 @@ front-back-web/
 3. Deploy to Tomcat:
    ```bash
    ./gradlew war
-   cp build/libs/basic-web-1.0-SNAPSHOT.war ../tomcat/webapps/basic-web.war
+   cp build/libs/front-back-web-1.0-SNAPSHOT.war ../tomcat/webapps/front-back-web.war
    ```
 
 ## Authentication Flow
@@ -272,7 +272,7 @@ The database must be set up manually before running the application for the firs
  - **Create Tables** (run as sammy)
  - **Insert Initial Data** (optional, run as sammy)
    ```bash
-   mysql -u root < src/main/resources/init.sql
+   mysql -u root -p < backend/src/main/resources/init.sql
    ```
 
 
@@ -282,7 +282,7 @@ The database must be set up manually before running the application for the firs
 - All database changes must be made manually using SQL scripts
 - To reset the database:
   ```bash
-  mysql -u root -e "DROP DATABASE basicwebdb;"
+  mysql -u root -e "DROP DATABASE frontbackwebdb;"
   ```
   Then follow the initial setup steps again
 
@@ -298,7 +298,7 @@ The database must be set up manually before running the application for the firs
 
 ```properties
 # Database Configuration
-spring.datasource.url=jdbc:mysql://localhost:3306/basicwebdb
+spring.datasource.url=jdbc:mysql://localhost:3306/frontbackwebdb
 spring.datasource.username=sammy
 spring.datasource.password=password123
 

@@ -1,6 +1,6 @@
-package com.example.basicweb.config;
+package com.example.frontbackweb.config;
 
-import com.example.basicweb.security.JwtAuthenticationFilter;
+import com.example.frontbackweb.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

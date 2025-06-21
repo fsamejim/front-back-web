@@ -1,15 +1,15 @@
 -- Create database if not exists
-CREATE DATABASE IF NOT EXISTS basicwebdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS frontbackwebdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Create user if not exists and set password
 CREATE USER IF NOT EXISTS 'sammy'@'localhost' IDENTIFIED BY 'password123';
 
 -- Grant privileges to sammy user
-GRANT ALL PRIVILEGES ON basicwebdb.* TO 'sammy'@'localhost';
+GRANT ALL PRIVILEGES ON frontbackwebdb.* TO 'sammy'@'localhost';
 FLUSH PRIVILEGES;
 
 -- Switch to the new database
-USE basicwebdb;
+USE frontbackwebdb;
 
 -- Create users table if not exists
 CREATE TABLE IF NOT EXISTS users (
@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Insert initial admin user if not exists
+-- Admin credentials: username='admin', password='admin123' (BCrypt hashed below)
 INSERT INTO users (username, password, email, active)
 SELECT 'admin', '$2a$10$DxDjxrTikQBAybXht4EgXuM1MsdbgSfoUkFqp0bD4Oo.KXq6ht5Uy', 'admin@example.com', true
 WHERE NOT EXISTS (

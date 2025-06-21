@@ -1,6 +1,6 @@
-package com.example.basicweb.repository;
+package com.example.frontbackweb.repository;
 
-import com.example.basicweb.model.User;
+import com.example.frontbackweb.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../types/auth';
 
-const API_URL = 'http://localhost:8080/basic-web/api/auth';
+const API_URL = 'http://localhost:8080/front-back-web/api/auth';
 
 // Function to set auth token in axios headers
 const setAuthToken = (token: string | null) => {

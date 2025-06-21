@@ -1,4 +1,4 @@
-package com.example.basicweb.exception;
+package com.example.frontbackweb.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

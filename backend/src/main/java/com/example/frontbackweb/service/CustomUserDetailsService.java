@@ -1,7 +1,7 @@
-package com.example.basicweb.service;
+package com.example.frontbackweb.service;
 
-import com.example.basicweb.model.User;
-import com.example.basicweb.repository.UserRepository;
+import com.example.frontbackweb.model.User;
+import com.example.frontbackweb.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

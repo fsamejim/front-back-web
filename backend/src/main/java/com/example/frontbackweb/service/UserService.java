@@ -1,7 +1,7 @@
-package com.example.basicweb.service;
+package com.example.frontbackweb.service;
 
-import com.example.basicweb.model.User;
-import com.example.basicweb.repository.UserRepository;
+import com.example.frontbackweb.model.User;
+import com.example.frontbackweb.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

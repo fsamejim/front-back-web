@@ -1,6 +1,6 @@
-package com.example.basicweb.security;
+package com.example.frontbackweb.security;
 
-import com.example.basicweb.config.JwtConfig;
+import com.example.frontbackweb.config.JwtConfig;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
