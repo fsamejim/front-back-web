@@ -28,7 +28,7 @@ front-back-web/
 │   │   │   │   ├── Login.tsx  # Login page with registration link
 │   │   │   │   ├── Register.tsx # Registration page
 │   │   │   │   └── ProtectedRoute.tsx # Route protection
-│   │   │   └── common/        # Shared components
+│   │   │   └── Dashboard.tsx  # Main dashboard with welcome message
 │   │   ├── contexts/          # React contexts
 │   │   │   └── AuthContext.tsx # Authentication context
 │   │   ├── services/          # API services
