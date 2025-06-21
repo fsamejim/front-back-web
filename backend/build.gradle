@@ -45,7 +45,7 @@ test {
 }
 
 application {
-    mainClass = findProperty('mainClass') ?: 'com.example.basicweb.BasicWebApplication'
+    mainClass = findProperty('mainClass') ?: 'com.example.frontbackweb.BasicWebApplication'
 }
 
 // Add test classes to runtime classpath

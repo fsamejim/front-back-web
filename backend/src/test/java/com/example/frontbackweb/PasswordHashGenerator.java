@@ -1,4 +1,4 @@
-package com.example.basicweb;
+package com.example.frontbackweb;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

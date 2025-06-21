@@ -1,4 +1,4 @@
-package com.example.basicweb.model;
+package com.example.frontbackweb.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

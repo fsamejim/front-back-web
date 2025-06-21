@@ -1,8 +1,8 @@
-package com.example.basicweb.controller;
+package com.example.frontbackweb.controller;
 
-import com.example.basicweb.model.User;
-import com.example.basicweb.security.JwtTokenProvider;
-import com.example.basicweb.service.UserService;
+import com.example.frontbackweb.model.User;
+import com.example.frontbackweb.security.JwtTokenProvider;
+import com.example.frontbackweb.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
