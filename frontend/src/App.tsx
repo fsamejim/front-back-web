@@ -4,14 +4,12 @@ import { AuthProvider } from './contexts/AuthContext';
 import { Login } from './components/auth/Login';
 import { Register } from './components/auth/Register';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { Dashboard } from './components/Dashboard';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 
 // Create a theme instance
 const theme = createTheme();
-
-// Placeholder Dashboard component - replace with your actual dashboard
-const Dashboard = () => <div>Dashboard (Protected Route)</div>;
 
 function App() {
   return (
